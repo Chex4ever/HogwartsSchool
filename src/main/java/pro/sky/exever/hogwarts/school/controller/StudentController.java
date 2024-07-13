@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.exever.hogwarts.school.controller.common.SimpleControllerImpl;
 import pro.sky.exever.hogwarts.school.model.Student;
-import pro.sky.exever.hogwarts.school.service.FacultyService;
 import pro.sky.exever.hogwarts.school.service.StudentService;
 
 import java.util.Collection;
@@ -13,12 +12,10 @@ import java.util.Collection;
 @RequestMapping("/student")
 public class StudentController extends SimpleControllerImpl<Student, StudentService> {
     StudentService studentService;
-    FacultyService facultyService;
 
-    protected StudentController(StudentService studentService, FacultyService facultyService) {
+    protected StudentController(StudentService studentService) {
         super(studentService);
         this.studentService = studentService;
-        this.facultyService = facultyService;
     }
 
     @Operation(operationId = "findByAgeBetween", summary = "Search students in age between")

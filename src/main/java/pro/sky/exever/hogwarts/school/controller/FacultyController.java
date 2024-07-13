@@ -31,6 +31,7 @@ public class FacultyController extends SimpleControllerImpl<Faculty, FacultyServ
         }
         return null;
     }
+
     @Operation(operationId = "findFacultyByStudentId", summary = "Find faculty by student ID")
     @GetMapping(value = "/student/{id}")
     Faculty findByNameAndColor(@PathVariable long id) {
