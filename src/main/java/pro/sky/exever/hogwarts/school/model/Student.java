@@ -1,41 +1,28 @@
 package pro.sky.exever.hogwarts.school.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.*;
 import pro.sky.exever.hogwarts.school.model.common.EntityWithId;
 
 import java.util.Objects;
 
+@Getter
+@Setter
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "student")
 public class Student extends EntityWithId {
     private String name;
     private int age;
-
-    @Column
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Column
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
+    @ManyToOne
+    @JoinColumn(name = "faculty_id")
+    private Faculty facultyId;
 
     @Override
     public boolean equals(Object o) {
