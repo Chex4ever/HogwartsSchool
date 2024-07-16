@@ -3,20 +3,16 @@ package pro.sky.exever.hogwarts.school.model.common;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
+@Setter
+@Getter
 @MappedSuperclass
 public abstract class EntityWithId implements Serializable {
-    private long id;
-
     @Id
     @GeneratedValue
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+    private Long id;
 }

@@ -1,41 +1,29 @@
 package pro.sky.exever.hogwarts.school.model;
 
-import jakarta.persistence.Column;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.*;
 import pro.sky.exever.hogwarts.school.model.common.EntityWithId;
 
 import java.util.Objects;
+import java.util.Set;
 
+@Getter
+@Setter
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "faculty")
 public class Faculty extends EntityWithId {
     private String name;
     private String color;
-
-    @Column
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Column
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
+    @JsonIgnore
+    @OneToMany(mappedBy = "facultyId")
+    private Set<Student> students;
 
     @Override
     public boolean equals(Object o) {
