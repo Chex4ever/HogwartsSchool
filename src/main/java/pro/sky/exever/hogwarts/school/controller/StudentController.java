@@ -32,7 +32,7 @@ public class StudentController extends SimpleControllerImpl<Student, StudentServ
     }
 
     @Operation(operationId = "findStudentsByFaculty", summary = "Find students by faculty")
-    @GetMapping(value = "/faculty/{id}")
+    @GetMapping(value = "/{id}/faculty")
     Collection<Student> findStudentsByFaculty(@PathVariable long id) {
         return studentService.FindByFacultyId(id);
     }

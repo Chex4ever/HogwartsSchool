@@ -7,6 +7,7 @@ import pro.sky.exever.hogwarts.school.model.Faculty;
 import pro.sky.exever.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
+import java.util.Collections;
 
 @RestController
 @RequestMapping("/faculty")
@@ -29,11 +30,11 @@ public class FacultyController extends SimpleControllerImpl<Faculty, FacultyServ
         } else if (name != null && color != null) {
             return service.findByNameLikeIgnoreCaseAndColorLikeIgnoreCase(name, color);
         }
-        return null;
+        return Collections.emptySet();
     }
 
     @Operation(operationId = "findFacultyByStudentId", summary = "Find faculty by student ID")
-    @GetMapping(value = "/student/{id}")
+    @GetMapping(value = "/{id}/student")
     Faculty findByNameAndColor(@PathVariable long id) {
         return service.findByStudentId(id);
     }
