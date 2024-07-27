@@ -1,9 +1,6 @@
 package pro.sky.exever.hogwarts.school.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import pro.sky.exever.hogwarts.school.model.common.EntityWithId;
 
@@ -23,6 +20,9 @@ public class Student extends EntityWithId {
     @ManyToOne
     @JoinColumn(name = "faculty_id")
     private Faculty facultyId;
+
+    @OneToOne(mappedBy = "student", fetch = FetchType.LAZY)
+    private Avatar avatar;
 
     @Override
     public boolean equals(Object o) {
