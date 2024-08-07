@@ -1,6 +1,7 @@
 package pro.sky.exever.hogwarts.school.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,11 +14,12 @@ import pro.sky.exever.hogwarts.school.service.AvatarService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 @RestController
 @RequestMapping("/student")
 public class AvatarController {
-    AvatarService avatarService;
+    private final AvatarService avatarService;
 
     protected AvatarController(AvatarService avatarService) {
         this.avatarService = avatarService;
@@ -37,8 +39,8 @@ public class AvatarController {
         HttpHeaders headers = new HttpHeaders();
         avatar = avatarService.findByStudent_Id(studentId);
         headers.setContentType(MediaType.parseMediaType(avatar.getMediaType()));
-        headers.setContentLength(avatar.getData().length);
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(avatar.getData());
+        headers.setContentLength(avatar.getPreview().length);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(avatar.getPreview());
     }
 
     @Operation(summary = "Read avatar from file")
@@ -55,5 +57,15 @@ public class AvatarController {
         } catch (IOException e) {
             throw new RuntimeException("Не удалось прочитать аватарку из файла");
         }
+    }
+    @Operation(operationId = "findByPage", summary = "Find by pages")
+    @GetMapping("/avatars")
+    List<Avatar> findByPage(@RequestParam(value = "page", required = false) Integer page
+            , @RequestParam(value = "size", required = false) Integer size){
+        if (size == null) {
+            size = 5;
+        }
+        List<Avatar> avatarList = avatarService.findByPage(PageRequest.of(page-1, size));
+        return avatarList;
     }
 }

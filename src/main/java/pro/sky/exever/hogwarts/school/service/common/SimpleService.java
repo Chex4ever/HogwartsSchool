@@ -1,6 +1,7 @@
 package pro.sky.exever.hogwarts.school.service.common;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import pro.sky.exever.hogwarts.school.model.common.EntityWithId;
 import pro.sky.exever.hogwarts.school.search.SearchRequest;
 
@@ -21,5 +22,7 @@ public interface SimpleService<E extends EntityWithId> {
 
     void deleteAll();
 
-    Page<E> search(SearchRequest request);
+    Page<E> advSearch(SearchRequest request);
+
+    List<E> findByPage(Pageable pageable);
 }

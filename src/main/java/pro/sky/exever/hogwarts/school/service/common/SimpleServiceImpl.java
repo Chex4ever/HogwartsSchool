@@ -3,6 +3,7 @@ package pro.sky.exever.hogwarts.school.service.common;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import pro.sky.exever.hogwarts.school.exception.EntityNotFoundException;
 import pro.sky.exever.hogwarts.school.model.common.EntityWithId;
 import pro.sky.exever.hogwarts.school.repository.common.SimpleRepository;
 import pro.sky.exever.hogwarts.school.search.SearchRequest;
@@ -35,13 +36,18 @@ public abstract class SimpleServiceImpl<E extends EntityWithId, R extends Simple
     }
 
     @Override
+    public List<E> findByPage(Pageable pageable) {
+        return repo.findAll(pageable).stream().toList();
+    }
+
+    @Override
     public Optional<E> update(E entity) {
         return Optional.of(repo.save(entity));
     }
 
     @Override
     public E delete(long id) {
-        E entity = get(id).orElseThrow();
+        E entity = get(id).orElseThrow(() -> new EntityNotFoundException(id));
         repo.deleteById(id);
         return entity;
     }
@@ -52,7 +58,7 @@ public abstract class SimpleServiceImpl<E extends EntityWithId, R extends Simple
     }
 
     @Override
-    public Page<E> search(SearchRequest request) {
+    public Page<E> advSearch(SearchRequest request) {
         SearchSpecification<E> specification = new SearchSpecification<>(request);
         Pageable pageable = SearchSpecification.getPageable(request.getPage(), request.getSize());
         return repo.findAll(specification, pageable);

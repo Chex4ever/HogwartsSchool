@@ -8,4 +8,8 @@ public class StudentNotFoundException extends RuntimeException {
     public StudentNotFoundException(Long message) {
         super("Студент со следующим ID не найден: " + message);
     }
+
+    public StudentNotFoundException(String s) {
+        super(s);
+    }
 }

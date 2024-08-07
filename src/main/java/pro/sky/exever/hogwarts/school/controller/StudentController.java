@@ -1,39 +1,61 @@
 package pro.sky.exever.hogwarts.school.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import pro.sky.exever.hogwarts.school.controller.common.SimpleControllerImpl;
 import pro.sky.exever.hogwarts.school.model.Student;
 import pro.sky.exever.hogwarts.school.service.StudentService;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/student")
 public class StudentController extends SimpleControllerImpl<Student, StudentService> {
-    StudentService studentService;
+    private final StudentService studentService;
 
-    protected StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService) {
         super(studentService);
         this.studentService = studentService;
     }
 
     @Operation(operationId = "findByAgeBetween", summary = "Search students in age between")
     @GetMapping(value = "/find")
-    Collection<Student> findByAgeBetween(@RequestParam(value = "ageMin", required = false) Integer min, @RequestParam(value = "ageMax", required = false) Integer max) {
+    public Collection<Student> findByAgeBetween(@RequestParam(value = "ageMin", required = false) Integer min, @RequestParam(value = "ageMax", required = false) Integer max) {
         if (min != null && max == null) {
             return studentService.findStudentsByAgeGreaterThanEqual(min);
         } else if (min == null && max != null) {
             return studentService.findStudentsByAgeLessThanEqual(max);
-        } else if (min != null && max != null) {
+        } else if (min != null) {
             return studentService.findByAgeBetween(min, max);
         }
-        return null;
+        throw new IllegalArgumentException("ageMin and/or ageMax are required");
     }
 
-    @Operation(operationId = "findStudentsByFaculty", summary = "Find students by faculty")
-    @GetMapping(value = "/{id}/faculty")
-    Collection<Student> findStudentsByFaculty(@PathVariable long id) {
-        return studentService.FindByFacultyId(id);
+    @Operation(operationId = "findByFacultyId", summary = "Find students by faculty")
+    @GetMapping(value = "/by-faculty")
+    public Collection<Student> findByFacultyId(@RequestParam Long id) {
+        return studentService.findByFacultyId(id);
+    }
+
+    @Operation(operationId = "getStudentsCount", summary = "Count students by query")
+    @GetMapping(value = "/count")
+    public Integer getStudentsCount() {
+        return studentService.getStudentsCount();
+    }
+
+    @Operation(operationId = "getStudentsAverageAge", summary = "Calculate students average age")
+    @GetMapping(value = "/average-age")
+    public Integer getStudentsAverageAge() {
+        return studentService.getStudentsAverageAge();
+    }
+
+    @Operation(operationId = "getStudentsLastFive", summary = "Get last five students")
+    @GetMapping(value = "/last")
+    public List<Student> getStudentsLastFive() {
+        return studentService.getStudentsLastFive();
     }
 }
