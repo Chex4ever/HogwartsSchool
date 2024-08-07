@@ -35,11 +35,13 @@ public abstract class SimpleControllerImpl<E extends EntityWithId, S extends Sim
 
     @Override
     public List<E> findByPage(Integer page, Integer size) {
+        if (page < 1) {
+            throw new IllegalArgumentException("Page number starts from 1");
+        }
         if (size == null) {
             size = 5;
         }
-
-        return service.findByPage(PageRequest.of(page, size));
+        return service.findByPage(PageRequest.of(page-1, size));
     }
 
     @Override
