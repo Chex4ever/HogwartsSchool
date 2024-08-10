@@ -85,7 +85,7 @@ public interface SimpleControllerRestTest<TestEntity extends EntityWithId, TestC
         var controller = createController();
         var service = createService();
         var rest = createTestRestTemplate();
-        String url = generateUrl(controller.getClass(), "getAll");
+        String url = generateUrl(controller.getClass(), "getAll")+"/all";
         rest.getForObject(url, String.class);
         Mockito.verify(service, Mockito.times(1)).getAll();
     }
@@ -106,7 +106,7 @@ public interface SimpleControllerRestTest<TestEntity extends EntityWithId, TestC
         var controller = createController();
         var service = createService();
         var rest = createTestRestTemplate();
-        String url = generateUrl(controller.getClass(), "delete", Long.class);
+        String url = generateUrl(controller.getClass(), "delete", long.class);
         rest.delete(url + "/0");
         Mockito.verify(service, Mockito.times(1)).delete(0L);
     }

@@ -31,27 +31,10 @@ public class Student extends EntityWithId {
         this.age = age;
     }
 
-    public Student(Long id, String name, int age) {
+    public Student(Long id, String name, int age, Faculty facultyId) {
         this(name, age);
         this.setId(id);
-    }
-
-    public Student(Long id, String name, int age, Faculty facultyId) {
-        this(id, name, age);
         this.facultyId = facultyId;
-    }
-
-    public Student(Long id, String name, int age, Faculty facultyId, Avatar avatar) {
-        this(id, name, age, facultyId);
-        this.avatar = avatar;
-    }
-
-    public Student(Student another) {
-        this.setId(another.getId());
-        this.name = another.getName();
-        this.age = another.getAge();
-        this.facultyId = another.getFacultyId();
-        this.avatar = another.getAvatar();
     }
 
     @Override

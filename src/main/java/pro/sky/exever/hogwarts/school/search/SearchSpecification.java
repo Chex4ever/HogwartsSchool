@@ -38,7 +38,9 @@ public class SearchSpecification<T> implements Specification<T> {
             orders.add(sort.getDirection().build(root, cb, sort));
         }
 
-        query.orderBy(orders);
+        if (query != null) {
+            query.orderBy(orders);
+        }
         return predicate;
     }
 
