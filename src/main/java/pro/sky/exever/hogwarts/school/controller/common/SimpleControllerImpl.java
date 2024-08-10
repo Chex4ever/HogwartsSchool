@@ -1,7 +1,10 @@
 package pro.sky.exever.hogwarts.school.controller.common;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import pro.sky.exever.hogwarts.school.exception.DatabaseTransactionException;
+import pro.sky.exever.hogwarts.school.exception.EntityNotFoundException;
 import pro.sky.exever.hogwarts.school.model.common.EntityWithId;
 import pro.sky.exever.hogwarts.school.search.SearchRequest;
 import pro.sky.exever.hogwarts.school.service.common.SimpleService;
@@ -17,17 +20,28 @@ public abstract class SimpleControllerImpl<E extends EntityWithId, S extends Sim
 
     @Override
     public ResponseEntity<E> create(E entity) {
-        return service.create(entity).map(ResponseEntity::ok).orElseThrow();
+        return service.create(entity).map(ResponseEntity::ok).orElseThrow(() -> new DatabaseTransactionException(entity.toString()));
     }
 
     @Override
     public ResponseEntity<E> update(E entity) {
-        return service.update(entity).map(ResponseEntity::ok).orElseThrow();
+        return service.update(entity).map(ResponseEntity::ok).orElseThrow(() -> new EntityNotFoundException(entity.getId()));
     }
 
     @Override
     public ResponseEntity<E> get(long id) {
-        return service.get(id).map(ResponseEntity::ok).orElseThrow();
+        return service.get(id).map(ResponseEntity::ok).orElseThrow(() -> new EntityNotFoundException(id));
+    }
+
+    @Override
+    public List<E> findByPage(Integer page, Integer size) {
+        if (page < 1) {
+            throw new IllegalArgumentException("Page number starts from 1");
+        }
+        if (size == null) {
+            size = 5;
+        }
+        return service.findByPage(PageRequest.of(page-1, size));
     }
 
     @Override
@@ -36,8 +50,8 @@ public abstract class SimpleControllerImpl<E extends EntityWithId, S extends Sim
     }
 
     @Override
-    public Page<E> search(SearchRequest request) {
-        return service.search(request);
+    public Page<E> advSearch(SearchRequest request) {
+        return service.advSearch(request);
     }
 
     @Override

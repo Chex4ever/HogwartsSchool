@@ -28,8 +28,8 @@ public class AvatarService extends SimpleServiceImpl<Avatar, AvatarRepository> {
     private final String thumbnailFormat;
     private final String thumbnailMIME;
     private final String avatarFormat;
-    AvatarRepository avatarRepository;
-    StudentRepository studentRepository;
+    private final AvatarRepository avatarRepository;
+    private final StudentRepository studentRepository;
 
     public AvatarService(AvatarRepository avatarRepository,
                          StudentRepository studentRepository,
@@ -50,7 +50,7 @@ public class AvatarService extends SimpleServiceImpl<Avatar, AvatarRepository> {
 
     public void upload(Long studentId, MultipartFile avatarFile) throws IOException {
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentNotFoundException(studentId));
-        Avatar avatar = avatarRepository.findById(studentId).orElseGet(Avatar::new);
+        Avatar avatar = avatarRepository.findById(studentId).orElse(new Avatar());
         Path filePath = Path.of(avatarsDir, studentId + "." + StringUtils.getFilenameExtension(avatarFile.getOriginalFilename()));
         if (!new File(avatarsDir).exists()) {
             Files.createDirectories(filePath.getParent());
@@ -82,7 +82,7 @@ public class AvatarService extends SimpleServiceImpl<Avatar, AvatarRepository> {
             avatar.setFilePath(filePath.toString());
             avatar.setFileSize(avatarSize);
             avatar.setMediaType(thumbnailMIME);
-            avatar.setData(baos2.toByteArray());
+            avatar.setPreview(baos2.toByteArray());
             avatarRepository.save(avatar);
         }
     }

@@ -22,9 +22,14 @@ public interface SimpleController<E extends EntityWithId> {
     @Operation(operationId = "GetById", summary = "GetById")
     ResponseEntity<E> get(@PathVariable long id);
 
-    @GetMapping
+    @GetMapping(path = "/all")
     @Operation(operationId = "GetAll", summary = "GetAll")
     ResponseEntity<List<E>> getAll();
+
+    @GetMapping
+    @Operation(operationId = "findByPage", summary = "Find by pages")
+    List<E> findByPage(@RequestParam(value = "page", required = false) Integer page
+            , @RequestParam(value = "size", required = false) Integer size);
 
     @DeleteMapping(path = "/{id}")
     @Operation(operationId = "Delete", summary = "Delete")
@@ -34,7 +39,7 @@ public interface SimpleController<E extends EntityWithId> {
     @Operation(operationId = "DropTable", summary = "DropTable")
     ResponseEntity<E> deleteAll();
 
+    @PostMapping(path = "/search")
     @Operation(operationId = "Search", summary = "Search by specification")
-    @PostMapping(value = "/search")
-    Page<E> search(@RequestBody SearchRequest request);
+    Page<E> advSearch(@RequestBody SearchRequest request);
 }

@@ -1,15 +1,17 @@
 package pro.sky.exever.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
+import pro.sky.exever.hogwarts.school.exception.StudentNotFoundException;
 import pro.sky.exever.hogwarts.school.model.Student;
 import pro.sky.exever.hogwarts.school.repository.StudentRepository;
 import pro.sky.exever.hogwarts.school.service.common.SimpleServiceImpl;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class StudentService extends SimpleServiceImpl<Student, StudentRepository> {
-    StudentRepository repo;
+    private final StudentRepository repo;
 
     public StudentService(StudentRepository repo) {
         super(repo);
@@ -32,9 +34,22 @@ public class StudentService extends SimpleServiceImpl<Student, StudentRepository
         return repo.findStudentsByAgeLessThanEqual(max);
     }
 
-    public Collection<Student> FindByFacultyId(Long i) {
-        return repo.findByFacultyId_Id(i);
+    public Collection<Student> findByFacultyId(Long i) {
+        var result = repo.findByFacultyId_Id(i);
+        if (result.isEmpty()) throw new StudentNotFoundException("Нет студентов на факультете с id %d".formatted(i));
+        return result;
     }
 
 
+    public Integer getStudentsCount() {
+        return repo.getStudentsCount();
+    }
+
+    public Integer getStudentsAverageAge() {
+        return repo.getStudentsAverageAge();
+    }
+
+    public List<Student> getStudentsLastFive() {
+        return repo.getStudentsLastFive();
+    }
 }

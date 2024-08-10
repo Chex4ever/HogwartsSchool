@@ -1,7 +1,10 @@
 package pro.sky.exever.hogwarts.school.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import pro.sky.exever.hogwarts.school.model.common.EntityWithId;
 
 import java.util.Arrays;
@@ -9,19 +12,18 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "avatar")
+
 public class Avatar extends EntityWithId {
     private String filePath;
     private long fileSize;
     private String mediaType;
-    private byte[] data; //todo rename to preview
+    private byte[] preview;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Student student;
 
     @Override
@@ -29,22 +31,21 @@ public class Avatar extends EntityWithId {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Avatar avatar = (Avatar) o;
-        return fileSize == avatar.fileSize && Objects.equals(filePath, avatar.filePath) && Objects.equals(mediaType, avatar.mediaType) && Objects.deepEquals(data, avatar.data) && Objects.equals(student, avatar.student);
+        return fileSize == avatar.fileSize && Objects.equals(filePath, avatar.filePath) && Objects.equals(mediaType, avatar.mediaType) && Objects.deepEquals(preview, avatar.preview) && Objects.equals(student, avatar.student);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(filePath, fileSize, mediaType, Arrays.hashCode(data), student);
+        return Objects.hash(filePath, fileSize, mediaType, Arrays.hashCode(preview), student);
     }
 
     @Override
     public String toString() {
-        return "Avatar{" +
-                "filePath='" + filePath + '\'' +
-                ", fileSize=" + fileSize +
-                ", mediaType='" + mediaType + '\'' +
-                ", data=" + Arrays.toString(data) +
-                ", student=" + student +
+        return "{" +
+                "\"filePath\":\"" + filePath + "\"" +
+                ", \"fileSize\":" + fileSize +
+                ", \"mediaType\":\"" + mediaType + "\"" +
+                ", \"student\":" + student.getId() +
                 '}';
     }
 }
