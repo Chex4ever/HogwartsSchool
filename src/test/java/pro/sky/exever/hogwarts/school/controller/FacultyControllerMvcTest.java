@@ -82,7 +82,7 @@ class FacultyControllerMvcTest implements SimpleControllerMvcTest<Faculty, Facul
     }
 
     @Test
-    void findByAgeBetweenTest() throws Exception {
+    void findByNameAndColorTest() throws Exception {
         String methodName = "findByNameAndColor";
         String url = generateUrl(FacultyController.class, methodName, String.class, String.class);
         when(facultyRepository.findByColorIgnoreCase(FACULTY1_COLOR)).thenReturn(Collections.singleton(FACULTY1));
@@ -104,20 +104,22 @@ class FacultyControllerMvcTest implements SimpleControllerMvcTest<Faculty, Facul
                 .andExpect(jsonPath("[0].name").value(FACULTY3.getName()));
         Mockito.verify(facultyService, Mockito.times(1)).findByNameLikeIgnoreCaseAndColorLikeIgnoreCase(FACULTY3_NAME, FACULTY3_COLOR);
     }
+
     @Test
-    void findByAgeBetweenTestNegative() throws Exception {
+    void findByNameAndColornTestNegative() throws Exception {
         String methodName = "findByNameAndColor";
         String url = generateUrl(FacultyController.class, methodName, String.class, String.class);
         mockMvc.perform(MockMvcRequestBuilders
                         .get(url + "?"))
                 .andExpect(status().isBadRequest());
     }
+
     @Test
     void findByStudentIdTest() throws Exception {
         String methodName = "findByStudentId";
         String param = "id";
         long testId = 1L;
-        String url = generateUrl(FacultyController.class, methodName, Long.class) + "?" + param + "=" + testId;
+        String url = generateUrl(FacultyController.class, methodName, long.class) + "?" + param + "=" + testId;
         when(facultyRepository.findByStudents_Id(testId)).thenReturn(FACULTY1);
         mockMvc.perform(MockMvcRequestBuilders.get(url)).andExpect(status().isOk());
         Mockito.verify(facultyService, Mockito.times(1)).findByStudentId(testId);
@@ -128,7 +130,7 @@ class FacultyControllerMvcTest implements SimpleControllerMvcTest<Faculty, Facul
         String methodName = "findByStudentId";
         String param = "id";
         long testId = 666L;
-        String url = generateUrl(FacultyController.class, methodName, Long.class) + "?" + param + "=" + testId;
+        String url = generateUrl(FacultyController.class, methodName, long.class) + "?" + param + "=" + testId;
         mockMvc.perform(MockMvcRequestBuilders.get(url)).andExpect(status().isBadRequest());
         Mockito.verify(facultyService, Mockito.times(1)).findByStudentId(testId);
     }

@@ -104,6 +104,7 @@ class StudentControllerMvcTest implements SimpleControllerMvcTest<Student, Stude
                 .andExpect(jsonPath("[0].name").value(STUDENT3.getName()));
         Mockito.verify(studentService, Mockito.times(1)).findByAgeBetween(AGE_MIN_VALUE, AGE_MAX_VALUE);
     }
+
     @Test
     void findByAgeBetweenTestNegative() throws Exception {
         String methodName = "findByAgeBetween";

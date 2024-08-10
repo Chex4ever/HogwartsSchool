@@ -12,7 +12,7 @@ public class TimingExtension implements BeforeTestExecutionCallback, AfterTestEx
     public static final String START_TIME = "start time";
 
     @Override
-    public void afterTestExecution(ExtensionContext context){
+    public void afterTestExecution(ExtensionContext context) {
         Method testMethod = context.getRequiredTestMethod();
         long startTime = getStore(context).remove(START_TIME, long.class);
         long duration = System.currentTimeMillis() - startTime;
@@ -20,7 +20,7 @@ public class TimingExtension implements BeforeTestExecutionCallback, AfterTestEx
     }
 
     @Override
-    public void beforeTestExecution(ExtensionContext context){
+    public void beforeTestExecution(ExtensionContext context) {
         getStore(context).put(START_TIME, System.currentTimeMillis());
     }
 

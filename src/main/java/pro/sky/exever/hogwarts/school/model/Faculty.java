@@ -2,9 +2,11 @@ package pro.sky.exever.hogwarts.school.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import pro.sky.exever.hogwarts.school.model.common.EntityWithId;
 
 import java.util.Objects;
@@ -12,18 +14,23 @@ import java.util.Set;
 
 @Getter
 @Setter
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "faculty")
 public class Faculty extends EntityWithId {
     private String name;
     private String color;
     @JsonIgnore
-    @OneToMany(mappedBy = "facultyId")
+    @OneToMany(mappedBy = "facultyId", fetch = FetchType.LAZY)
     private Set<Student> students;
+
+    public Faculty() {
+    }
+
+    public Faculty(Long id, String name, String color) {
+        this.name = name;
+        this.color = color;
+        this.setId(id);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -40,9 +47,10 @@ public class Faculty extends EntityWithId {
 
     @Override
     public String toString() {
-        return "Faculty{" +
-                "name='" + name + '\'' +
-                ", color='" + color + '\'' +
+        return "{" +
+                "\"id\":" + this.getId() + ", " +
+                "\"name\":\"" + name + "\", " +
+                "\"color\":\"" + color + "\"" +
                 '}';
     }
 }

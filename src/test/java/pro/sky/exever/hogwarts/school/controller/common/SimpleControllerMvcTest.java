@@ -157,7 +157,7 @@ public interface SimpleControllerMvcTest<TestEntity extends EntityWithId, TestRe
         var repo = createRepository();
         var entity = createEntity();
         var allEntities = Collections.singletonList(entity);
-        String url = generateUrl(controller.getClass(), "getAll");
+        String url = generateUrl(controller.getClass(), "getAll")+"/all";
         when(repo.findAll()).thenReturn(allEntities);
         mvc.perform(MockMvcRequestBuilders.get(url)).andExpect(status().isOk());
         Mockito.verify(service, Mockito.times(1)).getAll();

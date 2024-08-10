@@ -1,3 +1,5 @@
+
+
 insert into faculty (id, name, color) values
   (1, 'Gryffindor', 'GryffindorColor'),
   (2, 'Slytherin', 'SlytherinColor'),
