@@ -1,6 +1,8 @@
 package pro.sky.exever.hogwarts.school.service;
 
 import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -23,6 +25,7 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 @Service
 public class AvatarService extends SimpleServiceImpl<Avatar, AvatarRepository> {
+    private final Logger log = LoggerFactory.getLogger(AvatarService.class);
     private final String avatarsDir;
     private final int thumbnailHeight;
     private final String thumbnailFormat;
@@ -49,10 +52,12 @@ public class AvatarService extends SimpleServiceImpl<Avatar, AvatarRepository> {
     }
 
     public void upload(Long studentId, MultipartFile avatarFile) throws IOException {
+        log.info("Uploading avatar to student {}", studentId);
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentNotFoundException(studentId));
         Avatar avatar = avatarRepository.findById(studentId).orElse(new Avatar());
         Path filePath = Path.of(avatarsDir, studentId + "." + StringUtils.getFilenameExtension(avatarFile.getOriginalFilename()));
         if (!new File(avatarsDir).exists()) {
+            log.info("Директория с автарами не существует. Создаю новую директорию {}.",filePath.getParent());
             Files.createDirectories(filePath.getParent());
         }
         Files.deleteIfExists(filePath);
@@ -88,6 +93,7 @@ public class AvatarService extends SimpleServiceImpl<Avatar, AvatarRepository> {
     }
 
     public Avatar findByStudent_Id(Long studentId) {
+        log.info("Searching avatar by student ID {}", studentId);
         return avatarRepository.findByStudent_Id(studentId).orElseThrow(() -> new StudentNotFoundException(studentId));
     }
 }
