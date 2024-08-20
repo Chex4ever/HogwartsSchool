@@ -8,6 +8,8 @@ import pro.sky.exever.hogwarts.school.model.Student;
 import pro.sky.exever.hogwarts.school.repository.StudentRepository;
 import pro.sky.exever.hogwarts.school.service.common.SimpleServiceImpl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.List;
 
@@ -65,5 +67,21 @@ public class StudentService extends SimpleServiceImpl<Student, StudentRepository
     public List<Student> getStudentsLastFive() {
         log.info("Last 5 students by SQL query");
         return repo.getStudentsLastFive();
+    }
+
+    public List<String> getStudentsNamesWithAWithStream() {
+        return repo.findAll().stream()
+                .map(s -> s.getName().split(" ")[0].toUpperCase())
+                .filter(f -> f.startsWith("A"))
+                .sorted()
+                .toList();
+    }
+
+    public BigDecimal getStudentsAverageAgeWithStream() {
+        double average = repo.findAll().stream()
+                .mapToInt(Student::getAge)
+                .average()
+                .orElseThrow();
+        return BigDecimal.valueOf(average).setScale(2, RoundingMode.HALF_UP);
     }
 }
