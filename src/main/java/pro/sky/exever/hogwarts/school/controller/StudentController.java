@@ -9,6 +9,7 @@ import pro.sky.exever.hogwarts.school.controller.common.SimpleControllerImpl;
 import pro.sky.exever.hogwarts.school.model.Student;
 import pro.sky.exever.hogwarts.school.service.StudentService;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 
@@ -57,5 +58,17 @@ public class StudentController extends SimpleControllerImpl<Student, StudentServ
     @GetMapping(value = "/last")
     public List<Student> getStudentsLastFive() {
         return studentService.getStudentsLastFive();
+    }
+
+    @Operation(operationId = "getStudentsNamesWithAWithStream", summary = "Get students names sorted in upper case starting with A using stream")
+    @GetMapping(value = "/a-names")
+    public List<String> getStudentsNamesWithAWithStream() {
+        return studentService.getStudentsNamesWithAWithStream();
+    }
+
+    @Operation(operationId = "getStudentsAverageAgeWithStream", summary = "Calculate students average age with stream")
+    @GetMapping(value = "/average-age-stream")
+    public BigDecimal getStudentsAverageAgeWithStream() {
+        return studentService.getStudentsAverageAgeWithStream();
     }
 }

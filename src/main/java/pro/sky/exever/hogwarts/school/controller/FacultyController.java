@@ -41,4 +41,15 @@ public class FacultyController extends SimpleControllerImpl<Faculty, FacultyServ
         return service.findByStudentId(id);
     }
 
+    @Operation(operationId = "longestFacultyName", summary = "Find longest faculty name with stream")
+    @GetMapping(value = "/longest-name")
+    public String longestFacultyName() {
+        return service.longestFacultyName();
+    }
+
+    @Operation(operationId = "streamOptimisation", summary = "Stream optimisation")
+    @GetMapping(value = "/formula")
+    public Long streamOptimisation() {
+        return service.streamOptimisation();
+    }
 }
