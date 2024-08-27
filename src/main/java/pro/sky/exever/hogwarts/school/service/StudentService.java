@@ -97,7 +97,7 @@ public class StudentService extends SimpleServiceImpl<Student, StudentRepository
 
     private void printStudents(List<Student> students, int... nums) {
         for (int num : nums) {
-            System.out.println(students.get(num));
+            System.out.println(students.get(num) + ", nosync thread " + Thread.currentThread().getId());
         }
     }
 
@@ -114,7 +114,7 @@ public class StudentService extends SimpleServiceImpl<Student, StudentRepository
     private void printStudentsSync(List<Student> students, int... nums) {
         synchronized (flag) {
             for (int num : nums) {
-                System.out.println(students.get(num) + ", thread " + Thread.currentThread().getId());
+                System.out.println(students.get(num) + ", thread with some sync: " + Thread.currentThread().getId());
             }
         }
     }
