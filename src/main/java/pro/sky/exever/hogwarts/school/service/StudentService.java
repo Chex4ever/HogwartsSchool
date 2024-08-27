@@ -17,6 +17,7 @@ import java.util.List;
 public class StudentService extends SimpleServiceImpl<Student, StudentRepository> {
     private final Logger log = LoggerFactory.getLogger(StudentService.class);
     private final StudentRepository repo;
+    private final Object flag = new Object();
 
     public StudentService(StudentRepository repo) {
         super(repo);
@@ -53,7 +54,6 @@ public class StudentService extends SimpleServiceImpl<Student, StudentRepository
         return result;
     }
 
-
     public Integer getStudentsCount() {
         log.info("Counting students by SQL query");
         return repo.getStudentsCount();
@@ -83,5 +83,39 @@ public class StudentService extends SimpleServiceImpl<Student, StudentRepository
                 .average()
                 .orElseThrow();
         return BigDecimal.valueOf(average).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public void printParallel() {
+        List<Student> students = repo.findAll();
+        if (students.size() < 6) {
+            throw new StudentNotFoundException("Нужно 6 студентов, найдено " + students.size());
+        }
+        printStudents(students, 0, 1);
+        new Thread(() -> printStudents(students, 2, 3)).start();
+        new Thread(() -> printStudents(students, 4, 5)).start();
+    }
+
+    private void printStudents(List<Student> students, int... nums) {
+        for (int num : nums) {
+            System.out.println(students.get(num) + ", nosync thread " + Thread.currentThread().getId());
+        }
+    }
+
+    public void printSynchronized() {
+        List<Student> students = repo.findAll();
+        if (students.size() < 6) {
+            throw new StudentNotFoundException("Нужно 6 студентов, найдено " + students.size());
+        }
+        printStudentsSync(students, 0, 1);
+        new Thread(() -> printStudentsSync(students, 2, 3)).start();
+        new Thread(() -> printStudentsSync(students, 4, 5)).start();
+    }
+
+    private void printStudentsSync(List<Student> students, int... nums) {
+        synchronized (flag) {
+            for (int num : nums) {
+                System.out.println(students.get(num) + ", thread with some sync: " + Thread.currentThread().getId());
+            }
+        }
     }
 }
