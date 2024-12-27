@@ -71,4 +71,15 @@ public class StudentController extends SimpleControllerImpl<Student, StudentServ
     public BigDecimal getStudentsAverageAgeWithStream() {
         return studentService.getStudentsAverageAgeWithStream();
     }
+
+    @Operation(operationId = "print-parallel", summary = "Threads exercise: print-parallel")
+    @GetMapping(value = "/print-parallel")
+    public void printParallel() {
+        studentService.printParallel();
+    }
+    @Operation(operationId = "print-synchronized", summary = "Threads exercise: print-synchronized")
+    @GetMapping(value = "/print-synchronized")
+    public void printSynchronized() {
+        studentService.printSynchronized();
+    }
 }
